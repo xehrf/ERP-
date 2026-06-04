@@ -1,37 +1,298 @@
 @import 'tailwindcss';
 
+/* Подключаем Blade-файлы Laravel к Tailwind-сканированию. */
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 
+/* Основные цвета проекта. */
 :root {
-    --bg: #f4f6f8;
+    --bg: #f7f3f5;
     --panel: #ffffff;
     --ink: #18212f;
     --muted: #687386;
-    --line: #d9e0e8;
-    --accent: #16746a;
-    --accent-dark: #0e5b53;
-    --blue: #2563eb;
+    --line: #eadde2;
+    --accent: #800020;
+    --accent-dark: #5f0018;
+    --blue: #800020;
     --red: #c2413d;
     --yellow: #b7791f;
+    --soft-accent: #fff1f5;
+    --shadow: 0 18px 45px rgba(128, 0, 32, .09);
 }
 
+/* Все элементы считают размеры вместе с padding и border. */
 * {
     box-sizing: border-box;
 }
 
+/* Базовый стиль всей страницы. */
 body {
     margin: 0;
-    background: var(--bg);
+    background:
+        radial-gradient(circle at 12% 0%, rgba(128, 0, 32, .08), transparent 28%),
+        linear-gradient(135deg, #fbf7f9 0%, var(--bg) 44%, #f3e7ec 100%);
     color: var(--ink);
     font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
+.auth-body {
+    min-height: 100vh;
+    background: #eef1f5;
+    overflow-x: hidden;
+}
+
+.auth-split {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 590px;
+}
+
+.auth-visual {
+    position: relative;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 45% 22%, rgba(128, 0, 32, .18), transparent 18%),
+        linear-gradient(135deg, #08070d 0%, #110810 48%, #05070c 100%);
+    color: #fff;
+    padding: 54px;
+}
+
+.auth-visual::before,
+.auth-visual::after {
+    content: "";
+    position: absolute;
+    inset: -10%;
+    background-image:
+        linear-gradient(28deg, transparent 49.5%, rgba(255, 0, 72, .14) 50%, transparent 50.5%),
+        linear-gradient(148deg, transparent 49.5%, rgba(255, 0, 72, .10) 50%, transparent 50.5%);
+    background-size: 180px 180px;
+    opacity: .8;
+}
+
+.auth-visual::after {
+    transform: rotate(8deg) scale(1.15);
+    opacity: .45;
+}
+
+.mesh-bg {
+    display: none;
+}
+
+.auth-hero {
+    position: relative;
+    z-index: 1;
+    width: min(620px, 100%);
+    text-align: center;
+}
+
+.auth-mark {
+    width: 82px;
+    height: 82px;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 30px;
+    border-radius: 24px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    color: #fff;
+    font-size: 28px;
+    font-weight: 900;
+    box-shadow: 0 22px 55px rgba(128, 0, 32, .32);
+}
+
+.auth-hero h1 {
+    margin: 0;
+    color: #fff;
+    font-size: 46px;
+    line-height: 1.08;
+}
+
+.auth-hero p {
+    width: min(520px, 100%);
+    margin: 20px auto 0;
+    color: rgba(255, 255, 255, .66);
+    font-size: 18px;
+    line-height: 1.75;
+    font-weight: 700;
+}
+
+.auth-benefits {
+    width: min(460px, 100%);
+    display: grid;
+    gap: 16px;
+    margin: 58px auto 0;
+    text-align: left;
+}
+
+.auth-benefits div {
+    display: grid;
+    grid-template-columns: 46px minmax(0, 1fr);
+    align-items: center;
+    gap: 14px;
+}
+
+.auth-benefits strong {
+    width: 46px;
+    height: 46px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    background: rgba(128, 0, 32, .14);
+    color: var(--accent);
+    font-size: 13px;
+    box-shadow: inset 0 0 0 1px rgba(128, 0, 32, .18);
+}
+
+.auth-benefits span {
+    color: rgba(255, 255, 255, .72);
+    font-weight: 800;
+    line-height: 1.45;
+}
+
+.auth-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 42px 52px;
+    background: #f3f6fa;
+}
+
+.auth-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 42px;
+}
+
+.auth-brand-icon {
+    width: 46px;
+    height: 46px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 900;
+    box-shadow: 0 14px 30px rgba(128, 0, 32, .22);
+}
+
+.auth-brand strong {
+    color: #111827;
+    font-size: 28px;
+    line-height: 1;
+}
+
+.auth-brand span {
+    color: var(--accent);
+}
+
+.auth-heading {
+    margin-bottom: 34px;
+}
+
+.auth-heading h2 {
+    margin: 0 0 10px;
+    color: #111827;
+    font-size: 34px;
+    line-height: 1.1;
+}
+
+.auth-heading p {
+    margin: 0;
+    color: #64748b;
+    font-size: 18px;
+    line-height: 1.55;
+}
+
+.auth-form {
+    display: grid;
+    gap: 20px;
+}
+
+.auth-form label {
+    color: #111827;
+    font-weight: 800;
+}
+
+.auth-form input {
+    min-height: 52px;
+    border: 1px solid #dde4ee;
+    border-radius: 12px;
+    background: #fff;
+    padding: 0 16px;
+    box-shadow: 0 8px 18px rgba(15, 23, 42, .03);
+}
+
+.auth-form input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(128, 0, 32, .10);
+}
+
+.auth-remember {
+    color: #334155;
+    font-weight: 700;
+}
+
+.auth-submit {
+    min-height: 58px;
+    border: 0;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 900;
+    box-shadow: 0 18px 34px rgba(128, 0, 32, .26);
+    transition: .2s transform ease, .2s opacity ease;
+}
+
+.auth-submit:hover {
+    opacity: .96;
+    transform: translateY(-2px);
+}
+
+.auth-switch {
+    margin: 28px 0 0;
+    text-align: center;
+    color: #64748b;
+    font-weight: 700;
+}
+
+.auth-switch a {
+    color: var(--accent);
+    font-weight: 900;
+}
+
+.auth-alert {
+    position: fixed;
+    z-index: 20;
+    top: 18px;
+    right: 18px;
+    max-width: 420px;
+    border-radius: 14px;
+    padding: 14px 16px;
+    font-weight: 800;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, .16);
+}
+
+.auth-alert.success {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.auth-alert.error {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* У ссылок убираем стандартное подчеркивание. */
 a {
     color: inherit;
     text-decoration: none;
 }
 
+/* Формы наследуют шрифт от страницы. */
 button,
 input,
 select,
@@ -39,84 +300,105 @@ textarea {
     font: inherit;
 }
 
+/* Общая сетка: боковое меню + основной контент. */
 .shell {
     display: grid;
     grid-template-columns: 280px minmax(0, 1fr);
     min-height: 100vh;
 }
 
+/* Боковое меню слева. */
 .sidebar {
-    background: #111827;
+    background:
+        linear-gradient(180deg, #4b0013 0%, #70001c 42%, #2b0611 100%);
     color: #eef2f7;
-    padding: 24px;
+    padding: 26px 22px;
     display: flex;
     flex-direction: column;
     gap: 22px;
+    box-shadow: 16px 0 42px rgba(75, 0, 19, .18);
 }
 
+/* Логотип и название ERP. */
 .brand {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
+/* Квадратный знак HR. */
 .brand-mark {
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     display: grid;
     place-items: center;
-    border-radius: 8px;
-    background: var(--accent);
-    font-weight: 800;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, .14);
+    border: 1px solid rgba(255, 255, 255, .18);
+    font-weight: 900;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18);
 }
 
+/* Второстепенный текст в боковом меню и интерфейсе. */
 .brand small,
 .user-panel span,
 .eyebrow {
     color: #94a3b8;
 }
 
+/* Карточка текущего пользователя в боковом меню. */
 .user-panel {
-    border: 1px solid rgba(255, 255, 255, .1);
-    border-radius: 8px;
-    padding: 14px;
+    border: 1px solid rgba(255, 255, 255, .16);
+    border-radius: 16px;
+    padding: 16px;
     display: grid;
     gap: 4px;
+    background: rgba(255, 255, 255, .08);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08);
 }
 
+/* Ссылки меню. */
 .nav {
     display: grid;
     gap: 8px;
 }
 
+/* Стиль пунктов меню и кнопки выхода. */
 .nav a,
 .ghost-button {
-    border-radius: 8px;
-    padding: 11px 12px;
+    border-radius: 14px;
+    padding: 12px 13px;
     color: #dbe4ef;
     border: 1px solid transparent;
+    transition: .2s background ease, .2s border-color ease, .2s transform ease;
 }
 
+/* Состояние наведения и активного пункта меню. */
 .nav a:hover,
 .nav a.active,
 .ghost-button:hover {
-    background: rgba(255, 255, 255, .08);
-    border-color: rgba(255, 255, 255, .1);
+    background: rgba(255, 255, 255, .14);
+    border-color: rgba(255, 255, 255, .18);
+    transform: translateX(2px);
 }
 
+/* Форма выхода прижимается вниз бокового меню. */
 .logout-form {
     margin-top: auto;
 }
 
+/* Кнопка выхода занимает всю ширину. */
 .ghost-button {
     width: 100%;
     cursor: pointer;
 }
 
+/* Основная область контента. */
 .content {
-    padding: 32px;
+    padding: 34px;
 }
 
+/* Верх страницы: заголовок и кнопка справа. */
 .page-header {
     display: flex;
     align-items: center;
@@ -125,12 +407,15 @@ textarea {
     margin-bottom: 22px;
 }
 
+/* Главный заголовок страницы. */
 h1 {
     margin: 0;
-    font-size: 30px;
+    font-size: 34px;
     line-height: 1.15;
+    color: #25131a;
 }
 
+/* Маленькая подпись над заголовком. */
 .eyebrow {
     margin: 0 0 6px;
     color: var(--muted);
@@ -140,61 +425,165 @@ h1 {
     letter-spacing: 0;
 }
 
+/* Общий стиль панелей, таблиц, фильтров и карточек статистики. */
 .panel,
 .table-wrap,
 .metrics > div,
 .filters {
     background: var(--panel);
     border: 1px solid var(--line);
-    border-radius: 8px;
-    box-shadow: 0 10px 24px rgba(24, 33, 47, .05);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
 }
 
+/* Сетка карточек статистики. */
 .metrics {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 14px;
-    margin-bottom: 18px;
+    gap: 16px;
+    margin-bottom: 20px;
 }
 
-.metrics > div {
+.notifications-strip,
+.busy-calendar,
+.history-panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
     padding: 18px;
-    display: grid;
-    gap: 8px;
+    margin-bottom: 20px;
 }
 
-.metrics span,
-.day-preview span {
+.section-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.section-title span {
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.section-title strong {
+    min-width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: var(--soft-accent);
+    color: var(--accent);
+}
+
+.notification-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.notification-card {
+    display: grid;
+    gap: 6px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 14px;
+    background: #fff9fb;
+    transition: .2s transform ease, .2s border-color ease;
+}
+
+.notification-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(128, 0, 32, .25);
+}
+
+.notification-card span,
+.notification-card small {
     color: var(--muted);
     font-size: 13px;
 }
 
-.metrics strong {
-    font-size: 28px;
+/* Одна карточка статистики. */
+.metrics > div {
+    padding: 20px;
+    display: grid;
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
 }
 
+.metrics > div::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), #b1124b);
+}
+
+/* Маленькие подписи в статистике и комментариях. */
+.metrics span,
+.day-preview span,
+.comment-head span,
+.demo-hint {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+/* Большие числа в статистике. */
+.metrics strong {
+    font-size: 32px;
+    color: var(--accent);
+}
+
+/* Блок фильтров журнала. */
 .filters {
     display: flex;
     gap: 10px;
-    padding: 12px;
-    margin-bottom: 16px;
+    padding: 14px;
+    margin-bottom: 18px;
 }
 
+/* Поля формы: input, select, textarea. */
 select,
 input,
 textarea {
     width: 100%;
     border: 1px solid var(--line);
-    border-radius: 8px;
-    padding: 11px 12px;
+    border-radius: 12px;
+    padding: 12px 13px;
     background: #fff;
     color: var(--ink);
+    transition: .2s border-color ease, .2s box-shadow ease;
 }
 
+select {
+    min-width: 170px;
+    padding-right: 36px;
+    text-overflow: clip;
+}
+
+td select {
+    min-width: 150px;
+}
+
+select:focus,
+input:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(128, 0, 32, .09);
+}
+
+/* Текстовое поле можно растягивать вертикально. */
 textarea {
     resize: vertical;
 }
 
+/* label делает подпись и поле вертикальной группой. */
 label {
     display: grid;
     gap: 8px;
@@ -202,43 +591,63 @@ label {
     font-weight: 700;
 }
 
+/* Общая база для кнопок. */
 .primary-button,
 .secondary-button,
 .small-button,
-.danger-button {
+.danger-button,
+.small-link {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     min-height: 42px;
     border: 0;
-    border-radius: 8px;
+    border-radius: 12px;
     padding: 0 16px;
     cursor: pointer;
     font-weight: 800;
     white-space: nowrap;
+    transition: .2s transform ease, .2s opacity ease, .2s background ease;
 }
 
+/* Главная зеленая кнопка. */
 .primary-button {
-    background: var(--accent);
+    background: linear-gradient(135deg, var(--accent), #b1124b);
     color: #fff;
+    box-shadow: 0 12px 24px rgba(128, 0, 32, .18);
 }
 
+/* Зеленая кнопка при наведении. */
 .primary-button:hover {
-    background: var(--accent-dark);
+    background: linear-gradient(135deg, var(--accent-dark), #9b0d3c);
+    transform: translateY(-1px);
 }
 
+/* Вторичная серая кнопка. */
 .secondary-button {
-    background: #e8edf3;
-    color: #1f2937;
+    background: var(--soft-accent);
+    color: var(--accent);
+    border: 1px solid rgba(128, 0, 32, .12);
 }
 
+/* Маленькая синяя кнопка действий. */
 .small-button {
     min-height: 34px;
-    background: var(--blue);
+    background: linear-gradient(135deg, var(--accent), #a70d40);
     color: #fff;
     padding: 0 12px;
 }
 
+/* Маленькая ссылка-кнопка "Открыть". */
+.small-link {
+    min-height: 34px;
+    background: var(--soft-accent);
+    color: var(--accent);
+    border: 1px solid rgba(128, 0, 32, .12);
+    padding: 0 12px;
+}
+
+/* Кнопка опасного действия, например отклонения. */
 .danger-button {
     min-height: 34px;
     background: #f8dada;
@@ -246,37 +655,48 @@ label {
     padding: 0 12px;
 }
 
+/* Обертка таблицы дает горизонтальный скролл на узких экранах. */
 .table-wrap {
     overflow-x: auto;
+    border-radius: 18px;
 }
 
+/* Таблица занимает всю ширину. */
 table {
     width: 100%;
     border-collapse: collapse;
 }
 
+/* Ячейки таблицы. */
 th,
 td {
-    padding: 14px 16px;
+    padding: 16px 18px;
     border-bottom: 1px solid var(--line);
     text-align: left;
     vertical-align: middle;
 }
 
+/* Заголовки таблицы. */
 th {
     color: var(--muted);
     font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 0;
-    background: #f8fafc;
+    background: #fff7fa;
 }
 
+tbody tr:hover {
+    background: #fff9fb;
+}
+
+/* Контейнер кнопок действий в таблице. */
 .actions {
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
 }
 
+/* Бейджи типа документа и статуса. */
 .type-badge,
 .status {
     display: inline-flex;
@@ -288,125 +708,464 @@ th {
     font-weight: 800;
 }
 
+/* Бейдж отпуска. */
 .type-badge.vacation {
-    background: #e0f2f1;
-    color: #0f766e;
+    background: #fff1f5;
+    color: #800020;
 }
 
+/* Бейдж больничного. */
 .type-badge.sick_leave {
-    background: #e7eefc;
-    color: #1d4ed8;
+    background: #f3e8ff;
+    color: #6b21a8;
 }
 
+/* Желтые статусы ожидания. */
 .status.pending_hr,
 .status.pending_director {
     background: #fff3d6;
     color: var(--yellow);
 }
 
+/* Зеленый статус утверждения. */
 .status.approved {
     background: #dff4e8;
     color: #15803d;
 }
 
+/* Красный статус отклонения. */
 .status.rejected {
     background: #f9dddd;
     color: var(--red);
 }
 
+/* Серый статус черновика. */
 .status.draft {
     background: #e5e7eb;
     color: #4b5563;
 }
 
+/* Панель формы создания заявки. */
 .request-form {
     max-width: 920px;
-    padding: 22px;
+    padding: 24px;
     display: grid;
     gap: 20px;
 }
 
+/* Сетка основных полей формы заявки. */
 .form-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 16px;
 }
 
+/* Блок предпросмотра дней. */
 .day-preview {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
 }
 
+/* Карточка одного счетчика дней. */
 .day-preview > div {
     border: 1px solid var(--line);
-    border-radius: 8px;
+    border-radius: 16px;
     padding: 16px;
     display: grid;
     gap: 6px;
+    background: #fff9fb;
 }
 
+/* Число дней крупнее подписи. */
 .day-preview strong {
     font-size: 28px;
+    color: var(--accent);
 }
 
+.overlap-warning {
+    border: 1px solid rgba(194, 65, 61, .25);
+    border-radius: 14px;
+    padding: 12px 14px;
+    background: #fff1f1;
+    color: var(--red);
+    font-weight: 800;
+}
+
+.busy-calendar {
+    margin-bottom: 0;
+}
+
+.busy-item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    border-top: 1px solid var(--line);
+    padding: 12px 0;
+}
+
+.busy-item:first-of-type {
+    border-top: 0;
+    padding-top: 0;
+}
+
+.busy-item small {
+    color: var(--muted);
+}
+
+/* Кнопки формы справа. */
 .form-actions {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
 }
 
+/* Общий стиль уведомлений. */
 .alert {
-    border-radius: 8px;
+    border-radius: 14px;
     padding: 12px 14px;
     margin-bottom: 16px;
     font-weight: 700;
+    box-shadow: var(--shadow);
 }
 
+/* Успешное уведомление. */
 .alert.success {
     background: #dff4e8;
     color: #166534;
 }
 
+/* Уведомление с ошибкой. */
 .alert.error {
     background: #f9dddd;
     color: var(--red);
 }
 
+/* Пустое состояние и пагинация. */
 .empty,
 .pagination {
     color: var(--muted);
 }
 
+/* Отступ пагинации. */
 .pagination {
     margin-top: 16px;
 }
 
+/* Экран входа. */
 .login-screen {
     min-height: calc(100vh - 64px);
     display: grid;
     place-items: center;
-    grid-template-columns: minmax(0, 1fr) 380px;
-    gap: 32px;
+    grid-template-columns: minmax(0, 1fr) 420px;
+    gap: 48px;
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at top left, rgba(128, 0, 32, .18), transparent 32%),
+        linear-gradient(135deg, #fff7f9 0%, #f8fafc 45%, #f4e8ee 100%);
 }
 
+/* Логотип страницы входа. */
+.login-logo {
+    width: 82px;
+    height: 82px;
+    display: grid;
+    place-items: center;
+    border-radius: 24px;
+    background: linear-gradient(135deg, #800020, #b1124b);
+    color: #fff;
+    font-size: 28px;
+    font-weight: 900;
+    box-shadow: 0 18px 40px rgba(128, 0, 32, .28);
+    margin-bottom: 24px;
+}
+
+/* Заголовок страницы входа. */
 .login-copy h1 {
     max-width: 620px;
-    font-size: 44px;
+    font-size: 54px;
+    line-height: 1.05;
+    letter-spacing: 0;
+    margin-bottom: 18px;
 }
 
+/* Описание страницы входа. */
 .login-copy p:not(.eyebrow) {
-    max-width: 520px;
+    max-width: 560px;
     color: var(--muted);
     font-size: 18px;
+    line-height: 1.7;
 }
 
+/* Теги преимуществ системы. */
+.login-tags {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 26px;
+}
+
+/* Один тег преимущества. */
+.login-tags span {
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: rgba(128, 0, 32, .08);
+    color: #800020;
+    font-weight: 800;
+    border: 1px solid rgba(128, 0, 32, .12);
+}
+
+/* Панель формы входа. */
 .login-panel {
-    padding: 22px;
+    padding: 30px;
     display: grid;
-    gap: 16px;
+    gap: 18px;
 }
 
+/* Карточка формы входа. */
+.login-card {
+    border: 1px solid rgba(128, 0, 32, .14);
+    border-radius: 26px;
+    background: rgba(255, 255, 255, .92);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 24px 70px rgba(128, 0, 32, .16);
+}
+
+/* Поля формы входа. */
+.login-card input {
+    min-height: 48px;
+    border-radius: 12px;
+    transition: .2s border-color ease, .2s box-shadow ease;
+}
+
+/* Фокус поля формы. */
+.login-card input:focus {
+    outline: none;
+    border-color: #800020;
+    box-shadow: 0 0 0 4px rgba(128, 0, 32, .10);
+}
+
+/* Кнопка входа и регистрации. */
+.login-button {
+    min-height: 52px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #800020, #b1124b);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 800;
+    box-shadow: 0 14px 28px rgba(128, 0, 32, .24);
+    transition: .2s transform ease, .2s opacity ease;
+}
+
+/* Наведение на кнопку входа и регистрации. */
+.login-button:hover {
+    opacity: .96;
+    transform: translateY(-2px);
+}
+
+/* Кнопка-ссылка регистрации на странице входа. */
+.register-button {
+    min-height: 48px;
+    border-radius: 14px;
+    border: 1px solid rgba(128, 0, 32, .18);
+    background: #fff;
+    color: #800020;
+}
+
+/* Строка с чекбоксом. */
+.checkbox-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+}
+
+/* Чекбокс не должен занимать всю ширину как обычный input. */
+.checkbox-line input {
+    width: auto;
+}
+
+/* Подсказочный блок, если понадобится. */
+.demo-hint {
+    border-top: 1px solid var(--line);
+    padding-top: 12px;
+}
+
+/* Сетка детальной страницы заявки. */
+.details-grid {
+    display: grid;
+    grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
+    gap: 20px;
+}
+
+.history-panel {
+    grid-column: 1 / -1;
+    margin-bottom: 0;
+}
+
+.timeline {
+    display: grid;
+    gap: 14px;
+}
+
+.timeline-item {
+    display: grid;
+    grid-template-columns: 18px minmax(0, 1fr);
+    gap: 12px;
+    position: relative;
+}
+
+.timeline-item::before {
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: 20px;
+    bottom: -16px;
+    width: 2px;
+    background: var(--line);
+}
+
+.timeline-item:last-child::before {
+    display: none;
+}
+
+.timeline-dot {
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--accent), #b1124b);
+    box-shadow: 0 0 0 5px var(--soft-accent);
+}
+
+.timeline-item p {
+    margin: 4px 0;
+    color: var(--muted);
+}
+
+.timeline-item small {
+    color: var(--muted);
+}
+
+/* Панели данных заявки и комментариев. */
+.detail-panel,
+.comments-panel {
+    padding: 24px;
+}
+
+/* Заголовки внутри панелей. */
+.detail-panel h2,
+.comments-panel h2 {
+    margin: 0 0 16px;
+    font-size: 20px;
+}
+
+/* Список пар "поле - значение". */
+dl {
+    display: grid;
+    grid-template-columns: 150px minmax(0, 1fr);
+    gap: 10px 14px;
+    margin: 0;
+}
+
+/* Название поля в detail list. */
+dt {
+    color: var(--muted);
+    font-weight: 700;
+}
+
+/* Значение поля в detail list. */
+dd {
+    margin: 0;
+}
+
+/* Действия в карточке заявки. */
+.wide-actions {
+    margin-top: 20px;
+}
+
+/* Панель комментариев. */
+.comments-panel {
+    display: grid;
+    gap: 14px;
+}
+
+/* Один комментарий. */
+.comment {
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 14px;
+    background: #fff;
+}
+
+/* Ответ на комментарий. */
+.comment.reply {
+    margin: 12px 0 0 18px;
+    background: #fff7fa;
+}
+
+/* Верх комментария: автор и дата. */
+.comment-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+/* Текст комментария сохраняет переносы строк. */
+.comment p {
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+/* Формы комментария и ответа. */
+.comment-form,
+.reply-form {
+    display: grid;
+    gap: 10px;
+}
+
+/* Форма ответа отделяется от текста комментария. */
+.reply-form {
+    margin-top: 12px;
+}
+
+/* Сетка чекбоксов разрешений. */
+.permission-grid {
+    display: grid;
+    gap: 8px;
+}
+
+/* Панель создания пользователя. */
+.user-create-panel {
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+/* Заголовок панели создания пользователя. */
+.user-create-panel h2 {
+    margin: 0 0 16px;
+    font-size: 20px;
+}
+
+/* Форма создания пользователя. */
+.user-create-form {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    align-items: end;
+}
+
+/* Широкая сетка разрешений в форме создания. */
+.permission-grid-wide {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* Адаптация под телефоны и узкие экраны. */
 @media (max-width: 900px) {
     .shell {
         grid-template-columns: 1fr;
@@ -417,9 +1176,13 @@ th {
     }
 
     .metrics,
+    .notification-list,
     .form-grid,
     .day-preview,
-    .login-screen {
+    .login-screen,
+    .details-grid,
+    .user-create-form,
+    .permission-grid-wide {
         grid-template-columns: 1fr;
     }
 
@@ -434,6 +1197,10 @@ th {
     }
 
     .login-copy h1 {
-        font-size: 34px;
+        font-size: 38px;
+    }
+
+    .busy-item {
+        grid-template-columns: 1fr;
     }
 }
