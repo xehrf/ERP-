@@ -18,7 +18,9 @@
         <aside class="sidebar">
             {{-- Логотип и название системы. --}}
             <div class="brand">
-                <span class="brand-mark">HR</span>
+                <span class="brand-mark">
+                    <img src="{{ asset('images/erp-logo.png') }}" alt="ERP Кадры">
+                </span>
                 <div>
                     <strong>ERP Кадры</strong>
                     <small>Документы сотрудников</small>

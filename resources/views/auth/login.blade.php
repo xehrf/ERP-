@@ -8,7 +8,9 @@
             </div>
 
             <div class="auth-hero">
-                <div class="auth-mark">HR</div>
+                <div class="auth-mark">
+                    <img src="{{ asset('images/erp-logo.png') }}" alt="ERP Кадры">
+                </div>
                 <h1>Администратор ERP Кадры</h1>
                 <p>
                     Единая система для заявок на отпуск, больничных,
@@ -38,7 +40,9 @@
 
         <section class="auth-panel">
             <div class="auth-brand">
-                <div class="auth-brand-icon">HR</div>
+                <div class="auth-brand-icon">
+                    <img src="{{ asset('images/erp-logo.png') }}" alt="ERP Кадры">
+                </div>
                 <strong>ERP <span>Кадры</span></strong>
             </div>
 
