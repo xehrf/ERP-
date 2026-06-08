@@ -565,6 +565,26 @@ h1 {
     margin-bottom: 18px;
 }
 
+/* Поиск сотрудников на странице "Пользователи и права". */
+.admin-user-search {
+    align-items: end;
+}
+
+/* Поле поиска занимает основную ширину, а кнопки остаются компактными. */
+.admin-user-search label {
+    flex: 1;
+    min-width: 260px;
+}
+
+/* Ссылка сброса выглядит как кнопка и выравнивается по высоте с кнопкой поиска. */
+.search-reset {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
 /* Поля формы: input, select, textarea. */
 select,
 input,
@@ -694,6 +714,13 @@ td {
     vertical-align: middle;
 }
 
+/* Сообщение внутри таблицы, когда поиск никого не нашел. */
+.empty-table {
+    color: var(--muted);
+    text-align: center;
+    padding: 28px;
+}
+
 /* Заголовки таблицы. */
 th {
     color: var(--muted);
@@ -765,7 +792,7 @@ tbody tr:hover {
 
 /* Панель формы создания заявки. */
 .request-form {
-    max-width: 920px;
+    width: 100%;
     padding: 24px;
     display: grid;
     gap: 20px;

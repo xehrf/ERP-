@@ -14,7 +14,13 @@
     <section class="panel user-create-panel">
         <h2>Создать пользователя</h2>
         {{-- Форма отправляется в AdminUserController@store. --}}
-        <form method="POST" action="{{ route('admin.users.store') }}" class="user-create-form">
+        <form
+            method="POST"
+            action="{{ route('admin.users.store') }}"
+            class="user-create-form"
+            data-role-permissions-form
+            data-role-permissions='@json(\App\Models\User::defaultPermissionsByRole())'
+        >
             @csrf
             {{-- Имя нового пользователя. --}}
             <label>
@@ -61,6 +67,28 @@
     </section>
 
     {{-- Таблица существующих пользователей. --}}
+    {{-- Поиск сотрудников в таблице пользователей. --}}
+    <form method="GET" action="{{ route('admin.users.index') }}" class="filters admin-user-search">
+        {{-- Поле ищет по имени, email и роли. --}}
+        <label>
+            Поиск сотрудника
+            <input
+                type="search"
+                name="q"
+                value="{{ $search ?? '' }}"
+                placeholder="Имя, email или роль"
+            >
+        </label>
+
+        {{-- Кнопка запускает поиск. --}}
+        <button class="primary-button" type="submit">Найти</button>
+
+        {{-- Сброс очищает поиск и снова показывает всех пользователей. --}}
+        @if (! empty($search))
+            <a href="{{ route('admin.users.index') }}" class="ghost-button search-reset">Сбросить</a>
+        @endif
+    </form>
+
     <section class="table-wrap">
         <table>
             <thead>
@@ -75,7 +103,7 @@
             </thead>
             <tbody>
                 {{-- Проходим по каждому пользователю. --}}
-                @foreach ($users as $user)
+                @forelse ($users as $user)
                     <tr>
                         {{-- Имя пользователя. --}}
                         <td>{{ $user->name }}</td>
@@ -104,7 +132,13 @@
                         </td>
                         {{-- Форма обновления роли начинается здесь. --}}
                         <td>
-                            <form id="user-form-{{ $user->id }}" method="POST" action="{{ route('admin.users.update', $user) }}">
+                            <form
+                                id="user-form-{{ $user->id }}"
+                                method="POST"
+                                action="{{ route('admin.users.update', $user) }}"
+                                data-role-permissions-form
+                                data-role-permissions='@json(\App\Models\User::defaultPermissionsByRole())'
+                            >
                                 @csrf
                                 @method('PATCH')
                                 {{-- Выбор роли. --}}
@@ -137,7 +171,13 @@
                             <button form="user-form-{{ $user->id }}" class="small-button" type="submit">Сохранить</button>
                         </td>
                     </tr>
-                @endforeach
+                @empty
+                    <tr>
+                        <td colspan="6" class="empty-table">
+                            Сотрудники не найдены. Попробуйте изменить текст поиска.
+                        </td>
+                    </tr>
+                @endforelse
             </tbody>
         </table>
     </section>

@@ -93,6 +93,8 @@ class DocumentRequestController extends Controller
             'type' => $request->query('type', 'vacation'),
             // Занятые даты нужны форме, чтобы заранее предупредить о пересечении отпуска и больничного.
             'busyRequests' => $this->busyRequestsFor($request->user()),
+            // Праздники передаем в JavaScript, чтобы рабочие дни на странице считались так же, как на сервере.
+            'holidays' => $this->holidayDatesForYears((int) now()->year - 1, (int) now()->year + 2),
             // prefill заполняет форму, когда сотрудник нажимает "Повторить заявку".
             'prefill' => [
                 'start_date' => $request->query('start_date'),
@@ -279,6 +281,11 @@ class DocumentRequestController extends Controller
     {
         // Создаем период дат от startDate до endDate включительно.
         $period = CarbonPeriod::create($startDate, $endDate);
+        // Список праздничных дат нужен, чтобы не считать их рабочими днями.
+        $holidays = $this->holidayDatesForYears(
+            (int) $period->getStartDate()->year,
+            (int) $period->getEndDate()->year
+        );
         // Счетчик всех дней.
         $calendarDays = 0;
         // Счетчик дней без субботы и воскресенья.
@@ -289,14 +296,82 @@ class DocumentRequestController extends Controller
             // Каждый день считается календарным.
             $calendarDays++;
 
-            // Если день не выходной, считаем его рабочим.
-            if (! $date->isWeekend()) {
+            // Если день не выходной и не праздник, считаем его рабочим.
+            if (! $date->isWeekend() && ! in_array($date->format('Y-m-d'), $holidays, true)) {
                 $workingDays++;
             }
         }
 
         // Возвращаем два значения массивом.
         return [$calendarDays, $workingDays];
+    }
+
+    // Возвращает праздничные нерабочие дни Казахстана для диапазона лет.
+    private function holidayDatesForYears(int $startYear, int $endYear): array
+    {
+        $holidays = [];
+
+        for ($year = $startYear; $year <= $endYear; $year++) {
+            $holidays = array_merge($holidays, $this->holidayDatesForYear($year));
+        }
+
+        sort($holidays);
+
+        return array_values(array_unique($holidays));
+    }
+
+    // Возвращает праздники одного года. Если праздник выпадает на выходной, добавляет перенос.
+    private function holidayDatesForYear(int $year): array
+    {
+        // Официальные ежегодные праздники Казахстана.
+        $annualHolidays = [
+            '01-01',
+            '01-02',
+            '01-07',
+            '03-08',
+            '03-21',
+            '03-22',
+            '03-23',
+            '05-01',
+            '05-07',
+            '05-09',
+            '07-06',
+            '10-25',
+            '12-16',
+        ];
+
+        // Для этих праздников перенос на следующий рабочий день не добавляем.
+        $withoutTransfer = ['01-07'];
+        $dates = collect($annualHolidays)
+            ->map(fn (string $monthDay) => $year.'-'.$monthDay)
+            ->all();
+
+        foreach ($annualHolidays as $monthDay) {
+            $date = \Carbon\Carbon::createFromFormat('Y-m-d', $year.'-'.$monthDay);
+
+            if ($date->isWeekend() && ! in_array($monthDay, $withoutTransfer, true)) {
+                $transfer = $date->copy()->nextWeekday();
+
+                while (in_array($transfer->format('Y-m-d'), $dates, true)) {
+                    $transfer->addWeekday();
+                }
+
+                $dates[] = $transfer->format('Y-m-d');
+            }
+        }
+
+        // Курбан айт меняется по мусульманскому календарю, поэтому указываем по годам.
+        $qurbanAit = [
+            2026 => '2026-05-27',
+        ];
+
+        if (isset($qurbanAit[$year])) {
+            $dates[] = $qurbanAit[$year];
+        }
+
+        sort($dates);
+
+        return array_values(array_unique($dates));
     }
 
     // Считает статистику для карточек сверху в журнале.

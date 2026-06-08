@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 // Данные текущего запроса.
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 // Rule нужен для проверки, что роль/разрешение входят в разрешенный список.
 use Illuminate\Validation\Rule;
 // Blade-страница.
@@ -23,12 +24,42 @@ class AdminUserController extends Controller
         // Доступ только у пользователя с правом manage_users.
         abort_unless($request->user()->canManageUsers(), 403);
 
+        // Текст из поля поиска. По нему ищем сотрудника в админке.
+        $search = trim((string) $request->query('q', ''));
+
+        // Базовый запрос к таблице users.
+        $usersQuery = User::query()->orderBy('name');
+
+        // Если админ ввел текст, фильтруем сотрудников по имени, email и роли.
+        if ($search !== '') {
+            // Нормализуем текст поиска, чтобы регистр букв не мешал результатам.
+            $normalizedSearch = Str::lower($search);
+
+            // Дополнительно ищем роль по русскому названию: например "директор" найдет role = director.
+            $matchingRoleKeys = collect(User::availableRoles())
+                ->filter(fn (string $label, string $key) => Str::contains(Str::lower($label.' '.$key), $normalizedSearch))
+                ->keys()
+                ->all();
+
+            $usersQuery->where(function ($query) use ($normalizedSearch, $matchingRoleKeys) {
+                $query
+                    ->whereRaw('LOWER(name) LIKE ?', ['%'.$normalizedSearch.'%'])
+                    ->orWhereRaw('LOWER(email) LIKE ?', ['%'.$normalizedSearch.'%'])
+                    ->orWhereRaw('LOWER(role) LIKE ?', ['%'.$normalizedSearch.'%']);
+
+                if ($matchingRoleKeys !== []) {
+                    $query->orWhereIn('role', $matchingRoleKeys);
+                }
+            });
+        }
+
         // Возвращаем Blade-страницу admin/users.blade.php.
         return view('admin.users', [
             // Текущий пользователь.
             'currentUser' => $request->user(),
             // Все пользователи из базы.
-            'users' => User::orderBy('name')->get(),
+            'users' => $usersQuery->get(),
+            'search' => $search,
             // Список ролей для select.
             'roles' => User::availableRoles(),
             // Список разрешений для чекбоксов.

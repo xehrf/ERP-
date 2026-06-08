@@ -11,7 +11,13 @@
     </header>
 
     {{-- Форма создания заявки. data-day-calculator нужен JavaScript для подсчета дней. --}}
-    <form class="panel request-form" method="POST" action="{{ route('requests.store') }}" data-day-calculator>
+    <form
+        class="panel request-form"
+        method="POST"
+        action="{{ route('requests.store') }}"
+        data-day-calculator
+        data-holidays='@json($holidays)'
+    >
         {{-- CSRF-защита Laravel. --}}
         @csrf
         {{-- Сетка основных полей формы. --}}

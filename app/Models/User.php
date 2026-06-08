@@ -172,4 +172,22 @@ class User extends Authenticatable
             'comment' => 'Читать и писать комментарии',
         ];
     }
+
+    // Стандартные разрешения для каждой роли.
+    // Они используются в админке: админ выбирает роль, а чекбоксы прав включаются автоматически.
+    public static function defaultPermissionsByRole(): array
+    {
+        return [
+            // Кандидат только ждет решения админа, поэтому прав нет.
+            'candidate' => [],
+            // Работник может создавать свои заявки и писать комментарии.
+            'employee' => ['create_requests', 'comment'],
+            // Кадровик видит все заявки, согласовывает первый этап и комментирует.
+            'hr' => ['view_all_requests', 'approve_hr', 'comment'],
+            // Директор видит все заявки, утверждает финальный этап и комментирует.
+            'director' => ['view_all_requests', 'approve_director', 'comment'],
+            // Админ получает все права управления системой.
+            'admin' => ['create_requests', 'view_all_requests', 'approve_hr', 'approve_director', 'manage_users', 'comment'],
+        ];
+    }
 }
