@@ -837,6 +837,312 @@ tbody tr:hover {
     font-weight: 800;
 }
 
+/* Панель баланса ежегодного отпуска. */
+.vacation-balance {
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 16px;
+    background: #fff9fb;
+    display: grid;
+    gap: 10px;
+}
+
+/* Полоска прогресса использованного отпуска. */
+.balance-bar {
+    height: 10px;
+    border-radius: 999px;
+    background: var(--line);
+    overflow: hidden;
+}
+
+/* Закрашенная часть полоски прогресса. */
+.balance-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--accent), #b1124b);
+    transition: .2s width ease;
+}
+
+/* Текстовая подсказка о балансе. */
+.balance-note {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Предупреждение, если выбранные дни нарушают правило отпуска. */
+.balance-warning {
+    margin: 0;
+    color: var(--red);
+    font-weight: 800;
+    font-size: 14px;
+}
+
+/* Большой календарь на странице создания заявки. */
+.vacation-calendar {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+    padding: 20px;
+}
+
+/* Шапка календаря: название месяца и навигация. */
+.vc-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+/* Маленькая подпись "Календарь" над названием месяца. */
+.vc-head-label {
+    display: block;
+    margin: 0 0 4px;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+/* Название месяца и года. */
+.vc-month-label {
+    font-size: 20px;
+    color: var(--ink);
+}
+
+/* Группа кнопок навигации по месяцам. */
+.vc-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Кнопки переключения месяца и "Сегодня". */
+.vc-nav-btn {
+    min-height: 38px;
+    min-width: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(128, 0, 32, .12);
+    border-radius: 12px;
+    background: var(--soft-accent);
+    color: var(--accent);
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 14px;
+    transition: .2s background ease, .2s color ease, .2s transform ease;
+}
+
+/* Наведение на кнопки навигации. */
+.vc-nav-btn:hover {
+    background: linear-gradient(135deg, var(--accent), #b1124b);
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+/* Кнопка "Сегодня" немного шире и с меньшим текстом. */
+.vc-nav-today {
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+/* Строка названий дней недели. */
+.vc-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.vc-weekdays span {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+/* Сетка дней месяца. */
+.vc-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 8px;
+}
+
+/* Одна ячейка дня. */
+.vc-day {
+    position: relative;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 10px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #fff9fb;
+    color: var(--ink);
+    font-size: 17px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: .15s transform ease, .15s box-shadow ease, .15s background ease;
+}
+
+/* Наведение на день: легкое поднятие и тень. */
+.vc-day:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(128, 0, 32, .14);
+    z-index: 1;
+}
+
+/* Дни соседних месяцев показываем бледными. */
+.vc-day.is-other-month {
+    background: transparent;
+    border-color: transparent;
+    color: #d7d3d8;
+    font-weight: 700;
+}
+
+/* Выходные дни. */
+.vc-day.is-weekend {
+    background: #fdeef2;
+    color: #9a4a5a;
+}
+
+/* Праздничный день получает точку в углу. */
+.vc-day.is-holiday::after {
+    content: "";
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--yellow);
+}
+
+/* Дни, занятые отпуском - цветная полоска слева. */
+.vc-day.is-busy-vacation {
+    border-left: 4px solid var(--accent);
+}
+
+/* Дни, занятые больничным - полоска другого цвета. */
+.vc-day.is-busy-sick_leave {
+    border-left: 4px solid #6b21a8;
+}
+
+/* Заявка на проверке - желтый фон. */
+.vc-day.is-busy-pending {
+    background: #fff3d6;
+}
+
+/* Заявка утверждена - зеленый фон. */
+.vc-day.is-busy-approved {
+    background: #dff4e8;
+}
+
+/* Сегодняшний день обводим акцентной рамкой. */
+.vc-day.is-today {
+    box-shadow: inset 0 0 0 2px var(--accent);
+    color: var(--accent);
+}
+
+/* Выбранный пользователем диапазон дат. */
+.vc-day.is-selected {
+    background: linear-gradient(135deg, var(--accent), #b1124b);
+    border-color: transparent;
+    color: #fff;
+}
+
+/* Начало выбранного диапазона - скругление слева. */
+.vc-day.is-selected-start {
+    border-radius: 12px 6px 6px 12px;
+}
+
+/* Конец выбранного диапазона - скругление справа. */
+.vc-day.is-selected-end {
+    border-radius: 6px 12px 12px 6px;
+}
+
+/* Если выбран только один день, скругляем со всех сторон. */
+.vc-day.is-selected-start.is-selected-end {
+    border-radius: 12px;
+}
+
+/* Легенда календаря под сеткой. */
+.vc-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+}
+
+.vc-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* Цветной квадратик в легенде. */
+.vc-swatch {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 5px;
+    border: 1px solid var(--line);
+    background: #fff9fb;
+}
+
+.vc-swatch.is-today {
+    box-shadow: inset 0 0 0 2px var(--accent);
+}
+
+.vc-swatch.is-weekend {
+    background: #fdeef2;
+    border-color: transparent;
+}
+
+.vc-swatch.is-holiday {
+    position: relative;
+}
+
+.vc-swatch.is-holiday::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    width: 5px;
+    height: 5px;
+    border-radius: 999px;
+    background: var(--yellow);
+}
+
+.vc-swatch.is-selected {
+    background: linear-gradient(135deg, var(--accent), #b1124b);
+    border-color: transparent;
+}
+
+.vc-swatch.is-busy-pending {
+    background: #fff3d6;
+    border-color: transparent;
+}
+
+.vc-swatch.is-busy-approved {
+    background: #dff4e8;
+    border-color: transparent;
+}
+
 .busy-calendar {
     margin-bottom: 0;
 }

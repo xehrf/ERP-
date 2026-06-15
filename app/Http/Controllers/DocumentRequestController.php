@@ -93,6 +93,8 @@ class DocumentRequestController extends Controller
             'type' => $request->query('type', 'vacation'),
             // Занятые даты нужны форме, чтобы заранее предупредить о пересечении отпуска и больничного.
             'busyRequests' => $this->busyRequestsFor($request->user()),
+            // Баланс ежегодного отпуска: сколько дней уже использовано и сколько осталось.
+            'vacationBalance' => $this->vacationBalanceFor($request->user(), (int) now()->year),
             // Праздники передаем в JavaScript, чтобы рабочие дни на странице считались так же, как на сервере.
             'holidays' => $this->holidayDatesForYears((int) now()->year - 1, (int) now()->year + 2),
             // prefill заполняет форму, когда сотрудник нажимает "Повторить заявку".
@@ -141,6 +143,26 @@ class DocumentRequestController extends Controller
 
         // Считаем количество календарных и рабочих дней.
         [$calendarDays, $workingDays] = $this->calculateDays($data['start_date'], $data['end_date']);
+
+        // Дополнительные правила ежегодного отпуска проверяем только для типа "отпуск".
+        if ($data['type'] === 'vacation') {
+            // Баланс считаем за год, на который приходится дата начала отпуска.
+            $balance = $this->vacationBalanceFor($request->user(), (int) \Carbon\Carbon::parse($data['start_date'])->year);
+
+            // Первый отпуск в году нельзя брать короче минимального срока.
+            if ($balance['is_first'] && $calendarDays < $balance['min_first_days']) {
+                return back()
+                    ->withErrors(['start_date' => "Первый отпуск в году должен быть не менее {$balance['min_first_days']} календарных дней."])
+                    ->withInput();
+            }
+
+            // Сумма дней отпуска не может превышать остаток годовой нормы.
+            if ($calendarDays > $balance['remaining']) {
+                return back()
+                    ->withErrors(['start_date' => "Превышен остаток отпуска: доступно {$balance['remaining']} из {$balance['limit']} дней в {$balance['year']} году."])
+                    ->withInput();
+            }
+        }
 
         // Создаем заявку в базе данных.
         $documentRequest = DocumentRequest::create([
@@ -421,9 +443,40 @@ class DocumentRequestController extends Controller
                 'end_date' => $request->end_date->format('Y-m-d'),
                 // Русское название статуса.
                 'status' => $request->statusLabel(),
+                // Технический статус нужен JavaScript, чтобы раскрасить календарь.
+                'status_key' => $request->status,
             ])
             // Возвращаем обычный PHP-массив.
             ->all();
+    }
+
+    // Считает остаток ежегодного оплачиваемого отпуска сотрудника за календарный год.
+    private function vacationBalanceFor(User $user, int $year): array
+    {
+        // Годовая норма отпуска по законодательству - 28 календарных дней.
+        $annualLimit = 28;
+
+        // Складываем дни всех неотклоненных заявок на отпуск за этот год.
+        $usedDays = (int) DocumentRequest::where('user_id', $user->id)
+            ->where('type', 'vacation')
+            ->where('status', '!=', 'rejected')
+            ->whereYear('start_date', $year)
+            ->sum('calendar_days');
+
+        return [
+            // Год, за который считается баланс.
+            'year' => $year,
+            // Годовая норма отпуска.
+            'limit' => $annualLimit,
+            // Сколько дней уже использовано или ожидает решения.
+            'used' => $usedDays,
+            // Сколько дней осталось на этот год.
+            'remaining' => max(0, $annualLimit - $usedDays),
+            // true, если в этом году еще не было ни одной заявки на отпуск.
+            'is_first' => $usedDays === 0,
+            // Минимальная длина первого отпуска в году.
+            'min_first_days' => 14,
+        ];
     }
 
     // Сохраняет одну запись в историю заявки.
